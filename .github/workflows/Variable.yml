@@ -1,0 +1,13 @@
+name: Variables
+on: push
+
+jobs: 
+  print:
+    runs-on: ubuntu-latest
+    env:
+      # GitHubの変数(vars)を、このJobの環境変数(env)に詰め替える
+      MY_NAME: ${{ vars.USERNAME }} 
+    steps:
+      - name: 変数を表示
+        # runの中では $ を使って呼び出す（※波括弧 ${{ }} は不要）
+        run: echo "$MY_NAME"
