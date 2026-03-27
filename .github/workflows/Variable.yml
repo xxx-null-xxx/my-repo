@@ -1,13 +1,28 @@
-name: Variables
+# 1. ワークフローの名前（GitHubのActionsタブに表示される名前）
+name: Variables Test
+
+# 2. いつ実行するか（「push」されたら自動で動き出す設定）
 on: push
 
+# 3. 具体的な処理の中身（「jobs」の中に複数の作業を書ける）
 jobs: 
-  print:
+  print-job:
+    # 実行するマシンのOS（最新のUbuntu Linuxを使うのが一般的）
     runs-on: ubuntu-latest
+    
+    # 4. 「環境変数」のセットアップ（ここが重要！）
     env:
-      # GitHubの変数(vars)を、このJobの環境変数(env)に詰め替える
+      # 【GitHubの棚(vars)】から【実行マシンの変数(MY_NAME)】へ値をコピーする
+      # ${{ vars.XXX }} は GitHub Actions 専用の「値を取り出す魔法の杖」
       MY_NAME: ${{ vars.USERNAME }} 
+
+    # 5. 実際のコマンド実行手順
     steps:
-      - name: 変数を表示
-        # runの中では $ を使って呼び出す（※波括弧 ${{ }} は不要）
-        run: echo "$MY_NAME"
+      - name: 登録された変数をログに表示する
+        # run: の後は、普通の Linux コマンド（bash）として実行される
+        # さっき env でセットした値は $ をつけて呼び出す
+        run: echo "現在のユーザー名は $MY_NAME です"
+
+      - name: GitHubコンテキストから直接表示する
+        # 実は env に入れなくても、直接「魔法の杖」で表示することも可能
+        run: echo "実行したリポジトリは ${{ github.repository }} です"
